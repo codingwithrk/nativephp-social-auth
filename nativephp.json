@@ -1,0 +1,108 @@
+{
+    "name": "codingwithrk/nativephp-social-auth",
+    "version": "1.0.0",
+    "description": "Native Apple Sign-In and Google Sign-In for NativePHP Mobile apps.",
+    "namespace": "NativephpSocialAuth",
+    "keywords": ["social-auth", "apple-sign-in", "google-sign-in", "authentication", "sso"],
+    "category": "authentication",
+    "license": "MIT",
+    "pricing": {
+        "type": "free"
+    },
+    "author": {
+        "name": "CodingwithRK",
+        "email": "pappalarajkumar@gmail.com",
+        "url": "https://codingwithrk.com"
+    },
+    "homepage": "",
+    "repository": "",
+    "funding": [],
+    "platforms": ["android", "ios"],
+    "icon": "resources/icon.png",
+    "screenshots": [],
+    "bridge_functions": [
+        {
+            "name": "NativephpSocialAuth.AppleSignIn",
+            "android": "com.codingwithrk.plugins.nativephp_social_auth.NativephpSocialAuthFunctions.AppleSignIn",
+            "ios": "NativephpSocialAuthFunctions.AppleSignIn",
+            "description": "Start the native Sign in with Apple flow (iOS only)"
+        },
+        {
+            "name": "NativephpSocialAuth.GoogleSignIn",
+            "android": "com.codingwithrk.plugins.nativephp_social_auth.NativephpSocialAuthFunctions.GoogleSignIn",
+            "ios": "NativephpSocialAuthFunctions.GoogleSignIn",
+            "description": "Start the native Google Sign-In flow"
+        },
+        {
+            "name": "NativephpSocialAuth.CheckAppleCredentialState",
+            "android": "com.codingwithrk.plugins.nativephp_social_auth.NativephpSocialAuthFunctions.CheckAppleCredentialState",
+            "ios": "NativephpSocialAuthFunctions.CheckAppleCredentialState",
+            "description": "Check whether a previously issued Apple credential is still valid (iOS only)"
+        },
+        {
+            "name": "NativephpSocialAuth.SignOut",
+            "android": "com.codingwithrk.plugins.nativephp_social_auth.NativephpSocialAuthFunctions.SignOut",
+            "ios": "NativephpSocialAuthFunctions.SignOut",
+            "description": "Sign out of the native Google session (Apple has no sign-out API)"
+        }
+    ],
+    "android": {
+        "min_version": 29,
+        "permissions": [],
+        "dependencies": {
+            "implementation": [
+                "androidx.credentials:credentials:1.6.0",
+                "androidx.credentials:credentials-play-services-auth:1.6.0",
+                "com.google.android.libraries.identity.googleid:googleid:1.1.1"
+            ]
+        },
+        "meta_data": [
+            {
+                "name": "com.codingwithrk.nativephp_social_auth.GOOGLE_SERVER_CLIENT_ID",
+                "value": "${GOOGLE_SERVER_CLIENT_ID}"
+            }
+        ]
+    },
+    "ios": {
+        "min_version": "18.0",
+        "entitlements": {
+            "com.apple.developer.applesignin": ["Default"]
+        },
+        "info_plist": {
+            "GIDClientID": "${GOOGLE_IOS_CLIENT_ID}",
+            "GIDServerClientID": "${GOOGLE_SERVER_CLIENT_ID}",
+            "CFBundleURLTypes": [
+                {
+                    "CFBundleTypeRole": "Editor",
+                    "CFBundleURLSchemes": ["${GOOGLE_IOS_REVERSED_CLIENT_ID}"]
+                }
+            ]
+        },
+        "dependencies": {
+            "pods": [
+                {"name": "GoogleSignIn", "version": "~> 9.0"}
+            ]
+        }
+    },
+    "secrets": {
+        "GOOGLE_IOS_CLIENT_ID": {
+            "description": "Google OAuth iOS client ID from Google Cloud Console (Credentials -> OAuth 2.0 Client IDs -> iOS). Only used by the ios block above — required before an iOS build, irrelevant on Android.",
+            "required": false
+        },
+        "GOOGLE_IOS_REVERSED_CLIENT_ID": {
+            "description": "The iOS client ID reversed, shown as the 'iOS URL scheme' for the iOS OAuth client in Google Cloud Console (e.g. com.googleusercontent.apps.xxx). Only used by the ios block above — required before an iOS build, irrelevant on Android.",
+            "required": false
+        },
+        "GOOGLE_SERVER_CLIENT_ID": {
+            "description": "Google OAuth Web client ID from the same Cloud project. Used to verify ID tokens on both platforms and required by Android's Credential Manager.",
+            "required": true
+        }
+    },
+    "events": [
+        "Codingwithrk\\NativephpSocialAuth\\Events\\AppleSignInCompleted",
+        "Codingwithrk\\NativephpSocialAuth\\Events\\GoogleSignInCompleted",
+        "Codingwithrk\\NativephpSocialAuth\\Events\\AppleCredentialStateChecked",
+        "Codingwithrk\\NativephpSocialAuth\\Events\\SignInFailed"
+    ],
+    "service_provider": "Codingwithrk\\NativephpSocialAuth\\NativephpSocialAuthServiceProvider"
+}
